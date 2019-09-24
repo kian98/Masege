@@ -30,10 +30,8 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="/">主页
-                        <span class="sr-only">(current)</span>
-                    </a>
+                <li class="nav-item">
+                    <a class="nav-link" href="/">主页</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">消息</a>
@@ -41,8 +39,10 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#">我的</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">关于</a>
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">关于
+                        <span class="sr-only">(current)</span>
+                    </a>
                 </li>
             </ul>
         </div>
@@ -51,39 +51,15 @@
 
 <!-- Page Content -->
 <div class="container">
-    {% load comments %}
-
-    {% block post-content %}
-        <div style="margin-top:50px; margin-bottom:20px">
-            <h2 class="my-4">{{ post_obj.ptitle }}</h2>
-            <h5 style="text-align: right">From: {{ post_auth }} &#160 &#160 {{ post_obj.createTime }}</h5>
-        </div>
-        <div class="card mb-4">
-            <div class="card-body">
-                <div class="card-text">
-                    <pre>{{ post_obj.pcontent }}</pre>
-                </div>
-            </div>
-        </div>
-    {% endblock %}
-
-    <div class="card mb-4">
-        <div class="card-body">
-            <h4>评论:</h4>
-            {% get_comment_list for post_obj as comment_list %}
-            {% for comment in comment_list reversed %}
-                <hr>
-                {{ comment.submit_date }}
-                <br>
-                {{ comment.comment }}
-            {% endfor %}
-        </div>
-    </div>
 </div>
+<p style="text-align: center; font-size: 200px"><strong>Masege</strong></p>
+<p style="text-align: center; font-size: 60px">一个论坛</p>
+<p style="text-align: center; font-size: 60px">为交流而生</p>
+<a class="nav-link" href="/home/"><p style="text-align: center; font-size: 30px;margin-top: 20px">- 校友集散地 -</p></a>
 <!-- /.container -->
 
 <!-- Footer -->
-<footer class="py-5 bg-dark" style="margin-top:350px;">
+<footer class="py-5 bg-dark" style="margin-top:150px;">
     <div class="container">
         <p class="m-0 text-center text-white">Copyright &copy; Masege 2019</p>
     </div>
