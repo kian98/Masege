@@ -45,7 +45,7 @@
                     <a class="nav-link" href="#">关于</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="signout/">退出</a>
+                    <a class="nav-link" href="/signout/">退出</a>
                 </li>
             </ul>
         </div>
@@ -55,7 +55,10 @@
 <!-- Page Content -->
 <div class="container">
     {% load comments %}
-
+    <div style="float: left; margin-top:20px" class="btn btn-primary"
+         onclick="location.href = document.referrer; return false;">返回上一页 &#128281
+    </div>
+    <br>
     {% block post-content %}
         <div style="margin-top:50px; margin-bottom:20px">
             <h2 class="my-4">{{ post_obj.ptitle }}</h2>
@@ -69,6 +72,9 @@
             </div>
         </div>
     {% endblock %}
+
+    <div style="text-align: center;margin-top:0px;margin-bottom: 15px;width:95%;" class="btn btn-light">👍 喜欢 : {{ post_obj.like_cnt }}
+    </div>
 
     <div class="card mb-4">
         <div class="card-body">

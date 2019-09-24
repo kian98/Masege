@@ -45,7 +45,7 @@
                     <a class="nav-link" href="/about/">关于</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="signout/">退出</a>
+                    <a class="nav-link" href="/signout/">退出</a>
                 </li>
             </ul>
         </div>
@@ -75,7 +75,7 @@
                     <div class="card mb-4">
                         {#          <img class="card-img-top" src="http://placehold.it/750x300" alt="Card image cap">#}
                         <div class="card-body">
-                            <h2 class="card-title">{{ post.ptitle }}</h2>
+                            <h4 class="card-title">{{ post.ptitle }}</h4>
                             <div style="float: left;" class="card-text">{{ post.pabstract }}······</div>
                             <a href="/detail/{{ post.pid }}/">
                                 <div style="float: right;" class="btn btn-primary">让我看看 👉</div>
@@ -99,11 +99,11 @@
 
             <!-- Pagination -->
             <ul class="pagination justify-content-center mb-4">
-                <li class="page-item">
-                    <a class="page-link" href="#">&larr; Older</a>
+                <li class="page-item {{ has_newer }}">
+                    <a class="page-link" href="?page={{ pre_page}}">&larr; Newer</a>
                 </li>
-                <li class="page-item disabled">
-                    <a class="page-link" href="#">Newer &rarr;</a>
+                <li class="page-item {{ has_older }}">
+                    <a class="page-link" href="?page={{ next_page}}">Older &rarr;</a>
                 </li>
             </ul>
 
@@ -111,6 +111,10 @@
 
         <!-- Sidebar Widgets Column -->
         <div class="col-md-4">
+
+            <div style="margin-top:35px;width:100%;" class="btn btn-info">	&#128221; 说点什么...
+            </div>
+
 
             <!-- Search Widget -->
             <div class="card my-4">

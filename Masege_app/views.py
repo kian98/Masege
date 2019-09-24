@@ -43,16 +43,41 @@ def signout(request):
     return HttpResponseRedirect("/signin/")
 
 
+post_per_page = 5
+
+
 @login_required(login_url='/signin/')
 def index(request):
-    posts_list = models.Post.objects.all()
-    return render_to_response('index.html', {'posts_list': posts_list})
+    posts_list = models.Post.objects.all().order_by("-createTime")
+    page = request.GET.get('page')
+    if page == None or int(page)== 0:
+        end = post_per_page if posts_list.count() > post_per_page else posts_list.count()
+        sliced_posts_list = posts_list[:end]
+        has_newer = 'disabled'
+        return render_to_response('index.html', {'posts_list': sliced_posts_list, 'next_page': 1, 'pre_page': -1, 'has_newer':has_newer})
+    page = int(page)
+    if page < 0 or page * post_per_page > posts_list.count():
+        pass
+    begin = post_per_page * page
+    if posts_list.count() > post_per_page * (page + 1):
+        end = post_per_page * (page+1)
+        has_older = ''
+    else:
+        end = posts_list.count()
+        has_older = 'disabled'
+    sliced_posts_list = posts_list[begin:end]
+    return render_to_response('index.html',
+                              {'posts_list': sliced_posts_list, 'pre_page': page - 1, 'next_page': page + 1, 'has_older':has_older})
 
 
 @login_required(login_url='/signin/')
 def post_detail(request, post_id):
     post = models.Post.objects.get(pid=post_id)
     auth_name = models.Student.objects.get(username=post.pauth).sname
+
+    post.view_cnt += 1
+    post.save()
+
     return render_to_response('post_detail.html', {'post_obj': post, 'post_auth': auth_name})
 
 
