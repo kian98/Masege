@@ -8,4 +8,5 @@ urlpatterns = [
     path(r'signup/', views.signup),
     re_path(r'detail/(\d+)/', views.post_detail),
     path(r'about/', views.about),
+    path(r'signout/', views.signout),
 ]
