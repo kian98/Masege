@@ -21,6 +21,9 @@
 <body>
 
 <!-- Navigation -->
+<!-- 引入notifications的模板标签 -->
+{% load notifications_tags %}
+{% notifications_unread as unread_count %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container">
         <a class="navbar-brand" href="/">Masege · 一个论坛</a>
@@ -36,13 +39,25 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">消息</a>
+                    <a class="nav-link" href="/notice/" style="float: left">消息</a>
+
+                    {% if unread_count %}
+                        <svg viewBox="0 1 6 7"
+                             width="6px"
+                             height="6px" style="float: right;margin-left: -10px">
+                            <circle cx="3"
+                                    cy="4"
+                                    r="3"
+                                    fill="#ff6b6b"
+                            ></circle>
+                        </svg>
+                    {% endif %}
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">我的</a>
+                    <a class="nav-link" href="/myinfo/">我的</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">关于</a>
+                    <a class="nav-link" href="/about/">关于</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/signout/">退出</a>
@@ -55,44 +70,61 @@
 <!-- Page Content -->
 <div class="container">
     {% load comments %}
-    <div style="float: left; margin-top:20px" class="btn btn-primary"
-         onclick="location.href = document.referrer; return false;">返回上一页 &#128281
-    </div>
+    <a href="/">
+        <div style="float: left; margin-top:20px" class="btn btn-primary">返回 &#128281</div>
+    </a>
     <br>
     {% block post-content %}
         <div style="margin-top:50px; margin-bottom:20px">
             <h2 class="my-4">{{ post_obj.ptitle }}</h2>
-            <h5 style="text-align: right">From: {{ post_auth }} &#160 &#160 {{ post_obj.createTime }}</h5>
+            <h5 style="text-align: right">From: {% if not post_auth %}匿名{% else %}{{ post_auth }}{% endif %} &#160
+                &#160 {{ post_obj.createTime }}</h5>
         </div>
         <div class="card mb-4">
             <div class="card-body">
                 <div class="card-text">
-                    <pre>{{ post_obj.pcontent }}</pre>
+                    <big>
+                        <pre style="white-space:pre-wrap;line-height:24pt;">{{ post_obj.pcontent }}</pre>
+                    </big>
                 </div>
             </div>
         </div>
     {% endblock %}
 
-    <div style="text-align: center;margin-top:0px;margin-bottom: 15px;width:95%;" class="btn btn-light">👍 喜欢 : {{ post_obj.like_cnt }}
-    </div>
+    {#    <div style="text-align: center;margin-top:0px;margin-bottom: 15px;width:95%;" class="btn btn-light">👍 喜欢#}
+    {#        : {{ post_obj.like_cnt }}#}
+    {#    </div>#}
 
     <div class="card mb-4">
         <div class="card-body">
-            <h4>评论:</h4>
+            <h4><strong>评论:</strong></h4>
             {% get_comment_list for post_obj as comment_list %}
+            {% if not comment_list %}
+                <p style="margin-top:15px;margin-bottom: 15px;text-align: center;font-size: larger ">暂无评论</p>{% endif %}
             {% for comment in comment_list reversed %}
                 <hr>
-                {{ comment.submit_date }}
+                <div style="float:left;font-weight: bolder;">{{ comment.user }}</div>
+                <div style="float:right">{{ comment.submit_date }}</div>
                 <br>
-                {{ comment.comment }}
+                <div style="font-size: larger;line-height:22pt;">{{ comment.comment }}</div>
             {% endfor %}
+            <hr>
+            <h4 style="margin-top: 30px;margin-bottom: 25px"><strong>我想说：</strong></h4>
+            <form action="/sub_comment/" method="POST">
+                {% csrf_token %}
+                <textarea style="width: 100%" name="comment_content" rows="8" placeholder="友善的言语是交流的第一步..."
+                          required oninvalid="setCustomValidity('还没有内容～')" oninput="setCustomValidity('')"></textarea>
+                <input type="hidden" name="post_id" value="{{ post_obj.pid }}"/>
+                <input type="submit" value="评论" id="id_submit"
+                       style="text-align: center;width:100%; margin-top: 5px" class="btn btn-danger"/>
+            </form>
         </div>
     </div>
 </div>
 <!-- /.container -->
 
 <!-- Footer -->
-<footer class="py-5 bg-dark" style="margin-top:350px;">
+<footer class="py-5 bg-dark" style="margin-top:100px;">
     <div class="container">
         <p class="m-0 text-center text-white">Copyright &copy; Masege 2019</p>
     </div>

@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-# Create your models here.
+from django_comments.models import Comment
+from django.db.models.signals import post_save, post_delete,pre_delete
+from django.dispatch import receiver
 
 class Student(AbstractUser):
 
@@ -10,7 +12,7 @@ class Student(AbstractUser):
     # spwd = models.CharField(max_length=30, null=False)
 
     # 姓名 字符串 最大长度20
-    sname = models.CharField('姓名', max_length=20)
+    sname = models.CharField('姓名', max_length=20, default="某热心网友")
     # 性别 布尔类型 默认True: 男生 False:女生
     ssex = models.BooleanField('性别', default=True)
 
@@ -25,7 +27,7 @@ class Student(AbstractUser):
     sclass = models.CharField('班级', max_length=30)
 
     # 头像
-    avatar = models.ImageField('头像', upload_to='uploads_imgs/', default='uploads_imgs/default.jpg')
+    avatar = models.ImageField('头像', upload_to='', default='static/image/info-image.jpg')
     # 自我介绍
     signature = models.CharField('个性签名', max_length=128, default='The quick brown fox jumps over the lazy dog.')
 
@@ -61,3 +63,9 @@ class Post(models.Model):
     def __unicode__(self):
         return self.ptitle
 
+
+@receiver(pre_delete, sender=Comment)
+def before_delete_comment(sender, instance, **kwargs):
+    post = Post.objects.get(pid=instance.object_pk)
+    post.comment_cnt -= 1
+    post.save()

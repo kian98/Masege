@@ -8,7 +8,7 @@ class StudentAdmin(admin.ModelAdmin):
     list_display = ('username', 'sname', 'sinst', 'sdept', 'sclass')
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('ptitle', 'pid', 'pauth', 'view_cnt', 'like_cnt', 'createTime')
+    list_display = ('ptitle', 'pid', 'pauth', 'view_cnt', 'comment_cnt', 'createTime')
     list_filter = ('createTime',)
     search_fields = ('ptitle', 'pauth')
 
