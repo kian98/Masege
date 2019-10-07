@@ -27,7 +27,7 @@ class Student(AbstractUser):
     sclass = models.CharField('班级', max_length=30)
 
     # 头像
-    avatar = models.ImageField('头像', upload_to='', default='static/image/info-image.jpg')
+    avatar = models.ImageField('头像', upload_to='', default='/static/image/info-image.jpg')
     # 自我介绍
     signature = models.CharField('个性签名', max_length=128, default='The quick brown fox jumps over the lazy dog.')
 

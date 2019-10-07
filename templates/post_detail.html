@@ -77,8 +77,14 @@
     {% block post-content %}
         <div style="margin-top:50px; margin-bottom:20px">
             <h2 class="my-4">{{ post_obj.ptitle }}</h2>
-            <h5 style="text-align: right">From: {% if not post_auth %}匿名{% else %}{{ post_auth }}{% endif %} &#160
+{#        <div>#}
+{#            <img name="avatar" id="avatar" width="80" class="img-thumbnail" src="{{ post_auth.avatar }}" >#}
+{#        </div>#}
+        <div>
+            <h5 style="text-align: right">From: {% if not post_auth.sname %}匿名{% else %}{{ post_auth.sname }}{% endif %}
+                &#160
                 &#160 {{ post_obj.createTime }}</h5>
+        </div>
         </div>
         <div class="card mb-4">
             <div class="card-body">

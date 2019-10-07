@@ -1,3 +1,5 @@
+import os
+
 from django.contrib import auth
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
@@ -99,12 +101,12 @@ def index(request):
 @login_required(login_url='/signin/')
 def post_detail(request, post_id):
     post = models.Post.objects.get(pid=post_id)
-    auth_name = models.Student.objects.get(username=post.pauth).sname
+    auth = models.Student.objects.get(username=post.pauth)
 
     post.view_cnt += 1
     post.save()
 
-    return render(request, 'post_detail.html', {'post_obj': post, 'post_auth': auth_name})
+    return render(request, 'post_detail.html', {'post_obj': post, 'post_auth': auth})
 
 
 @login_required(login_url='/signin/')
@@ -160,14 +162,25 @@ def myinfo(request):
     myinfo = request.user
 
     if request.method == 'POST':
+
         sname = request.POST.get('name')
         ssex = request.POST.get('sex')
         sinst = request.POST.get('institution')
         sdept = request.POST.get('department')
         sclass = request.POST.get('class')
         signature = request.POST.get('signature')
+
+        avatar = request.FILES.get('avatarFile')
+        save_path = myinfo.avatar
+        if avatar:
+            save_path = os.path.join('static/image', myinfo.username+os.path.splitext(avatar.name)[1])
+            with open(save_path, 'wb') as f:
+                for i in avatar.chunks():
+                    f.write(i)
+            save_path = "/" + save_path
+
         models.Student.objects.filter(username=myinfo.username).update(sname=sname, ssex=ssex, sinst=sinst, sdept=sdept,
-                                                                       sclass=sclass, signature=signature)
+                                                                       sclass=sclass, signature=signature, avatar=save_path)
         return HttpResponseRedirect('/myinfo/')
     return render(request, "myinfo.html", {'myinfo': myinfo})
 

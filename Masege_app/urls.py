@@ -22,5 +22,3 @@ urlpatterns = [
     path('notice/', views.CommentNoticeListView.as_view(), name='notice'),
     path('update/', views.CommentNoticeUpdateView.as_view(), name='update'),
 ]
-
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

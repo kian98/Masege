@@ -76,10 +76,11 @@
             </small>
         </small>
     </h1>
-    <div class="row">
-        <div class="col-md-7 ">
-            {#            {% block loadinfo %}#}
-            <form method="POST" id="info_form" name="info_form">
+    <form method="POST" id="info_form" name="info_form" enctype="multipart/form-data">
+
+        <div class="row">
+            <div class="col-md-7 ">
+                {#            {% block loadinfo %}#}
                 {% csrf_token %}
                 <div class="form-group">
                     <label for="sname" class="col-sm-2 control-label">姓名</label>
@@ -142,24 +143,21 @@
                                value="提交" style="margin-left: 50px"/>
                     </div>
                 </div>
-            </form>
-        </div>
-        {% load static %}
-        <div class="col-md-2">
-            <a href="#" class="thumbnail">
-                <img name="avatar" width="250" class="img-thumbnail" src="/static/image/info-image.jpg"
-                     style="margin-top: 20px">
-            </a><br><br>
-            <a href="javascript:;" class="file" style="float: left">选 择
-                <input align="center" type="file" name="" id="">
-            </a>
-            <a href="javascript:;" class="file" style="float: right">提 交
-                <input align="center" type="button">
-            </a>
-        </div>
-        <div class="col-md-1"></div>
+            </div>
+            {% load static %}
+            <div class="col-md-2">
+                <a class="thumbnail">
+                    <img name="avatar" id="avatar" width="250" class="img-thumbnail" src="{{ myinfo.avatar }}"
+                         style="margin-top: 20px">
+                </a><br><br>
+                <div align="center"><a href="javascript:;" class="file" style="visibility: hidden" id="chooseAvatar">选 择
+                    <input align="center" type="file" accept="image/gif,image/jpeg,image/jpg,image/png"
+                           onchange="newAvatar(event)" name="avatarFile" id="avatarFile">
+                </a></div>
+            </div>
+    </form>
 
-    </div>
+</div>
 </div>
 <!-- /.container -->
 
@@ -173,7 +171,26 @@
         document.getElementById("class").disabled = false;
         document.getElementById("signature").disabled = false;
         document.getElementById("savebtn").disabled = false;
+        document.getElementById("chooseAvatar").style.visibility = "visible";
     }
+
+    function newAvatar(e) {
+        var files = e.target.files;
+        if (files && files.length > 0) {
+            // 获取目前上传的文件
+            file = files[0];// 文件大小校验的动作
+            if (file.size > 1024 * 1024 * 4) {
+                alert('图片大小不能超过 4MB!');
+                return false;
+            }
+            // 获取 window 的 URL 工具
+            var URL = window.URL || window.webkitURL;
+            // 通过 file 生成目标 url
+            var imgURL = URL.createObjectURL(file);
+            //用attr将img的src属性改成获得的url
+            $("#avatar").attr("src", imgURL);
+        }
+    };
 
 </script>
 
